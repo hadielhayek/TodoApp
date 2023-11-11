@@ -4,7 +4,6 @@ import { FiMail, FiLock } from 'react-icons/fi';
 import todo from '../../assets/todo.png';
 import '../../styles/LoginForm.css';
 import axios from 'axios';
-// import { AuthProvider, useAuth } from './AuthContext';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ const LoginForm: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-// const {login} = useAuth()
   
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -27,36 +25,33 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     return true; 
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!validateFormData()) {
-      setError('Please fill out the form correctly.');
-      return;
+  if (!validateFormData()) {
+    setError('Please fill out the form correctly.');
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const response = await axios.post('http://localhost:3000/auth/login', formData);
+
+    if (response.status === 201) {
+      localStorage.setItem('token', response.data.token);
+      navigate('/todo');
+    } else {
+      setError(response.data.error || 'Login failed. Please check your credentials.');
     }
+  } catch (error) {
+    setError('An unexpected error occurred. Please try again.');
+    console.error('Error during login:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      setLoading(true);
-
-      const response = await axios.post('http://localhost:3000/auth/login', formData);
-
-      if (response.status === 201) {
-      // login()
-      localStorage.setItem('token',response.data.token)
-      setTimeout(() => {
-        navigate('/todo');
-      }, 500);
-
-      } else {
-        setError(response.data.error || 'Login failed. Please check your credentials.');
-      }
-    } catch (error) {
-      setError('An unexpected error occurred. Please try again.');
-      console.error('Error during login:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
 
   return (

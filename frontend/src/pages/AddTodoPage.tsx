@@ -35,7 +35,7 @@ const AddTodoPage: React.FC = () => {
 
       if (response.ok) {
         console.log('Todo added successfully:', data);
-        navigate('/todos');
+        navigate('/todo');
       } else {
         console.error('Failed to add todo:', data.error || 'An unexpected error occurred.');
       }

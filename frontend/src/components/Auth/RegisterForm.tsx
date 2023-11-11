@@ -28,19 +28,21 @@ const RegisterForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!validateFormData()) {
       setError('Please fill out the form correctly.');
       return;
     }
-
+  
     try {
       setLoading(true);
-
+  
       const response = await axios.post('http://localhost:3000/auth/register', formData);
-
+  
       if (response.status === 200) {
-        navigate('/login');
+        setTimeout(() => {
+          navigate('/login');
+        }, 500);
       } else {
         setError(response.data.error || 'Registration failed. Please try again.');
       }
@@ -51,6 +53,7 @@ const RegisterForm: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>
